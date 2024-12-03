@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     public function index()
-    {
-        $menus = Menu::all(); // Mengambil semua data dari tabel menus
-        return view('menus.index', compact('menus')); // Kirim data ke view
-    }
+{
+    $foods = Menu::where('type', 'food')->get(); // Makanan
+    $drinks = Menu::where('type', 'drink')->get(); // Minuman
+    return view('menus.index', compact('foods', 'drinks'));
+}
+
 }

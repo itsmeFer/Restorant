@@ -36,4 +36,6 @@ Route::resource('orders', OrderController::class);
 Route::resource('tables', TableController::class);
 
 
+Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
+
 require __DIR__.'/auth.php';
