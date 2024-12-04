@@ -39,3 +39,10 @@ Route::resource('tables', TableController::class);
 Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
 
 require __DIR__.'/auth.php';
+
+Route::get('/', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+Route::get('/tables', [TableController::class, 'index'])->name('tables.index');

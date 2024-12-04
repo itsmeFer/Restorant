@@ -1,29 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Meja</title>
-</head>
-<body>
-    <h1>Daftar Meja Restoran</h1>
-    <table border="1">
-        <thead>
+@extends('layouts.app')
+
+@section('content')
+<h1 class="mb-4">Daftar Meja</h1>
+
+<a href="#" class="btn btn-primary mb-3">Tambah Meja</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Nomor Meja</th>
+            <th>Kapasitas</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($tables as $table)
             <tr>
-                <th>Nomor Meja</th>
-                <th>Kapasitas</th>
-                <th>Status</th>
+                <td>{{ $table->table_number }}</td>
+                <td>{{ $table->capacity }}</td>
+                <td>
+                    <span class="badge bg-{{ $table->status == 'available' ? 'success' : 'danger' }}">
+                        {{ ucfirst($table->status) }}
+                    </span>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($tables as $table)
-                <tr>
-                    <td>{{ $table->table_number }}</td>
-                    <td>{{ $table->capacity }}</td>
-                    <td>{{ ucfirst($table->status) }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
-</html>
+        @empty
+            <tr>
+                <td colspan="3" class="text-center">Belum ada data meja.</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+@endsection
