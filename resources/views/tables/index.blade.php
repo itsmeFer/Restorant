@@ -9,8 +9,8 @@
     <thead class="table-dark">
         <tr>
             <th>Nomor Meja</th>
-            <th>Kapasitas</th>
-            <th>Status</th>
+            <th>Kapasitas meja</th>
+            <th>Status meja</th>
         </tr>
     </thead>
     <tbody>
