@@ -46,3 +46,13 @@ Route::get('/', function () {
 
 Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
 Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
+use App\Http\Controllers\ReservationController;
+
+// Halaman makanan untuk memilih menu
+Route::get('/reservations/menus', [ReservationController::class, 'selectMenus'])->name('reservations.menus');
+
+// Halaman untuk memilih meja
+Route::get('/reservations/tables', [ReservationController::class, 'selectTable'])->name('reservations.tables');
+
+// Submit reservasi
+Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
