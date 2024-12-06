@@ -1,17 +1,20 @@
 <?php
 
+// app/Http/Controllers/MenuController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
-use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
     public function index()
-{
-    $foods = Menu::where('type', 'food')->get(); // Makanan
-    $drinks = Menu::where('type', 'drink')->get(); // Minuman
-    return view('menus.index', compact('foods', 'drinks'));
-}
+    {
+        // Ambil data makanan dan minuman dari tabel menus
+        $foods = Menu::where('category', 'Makanan')->get(); // Ambil data kategori Makanan
+        $drinks = Menu::where('category', 'Minuman')->get(); // Ambil data kategori Minuman
 
+        // Kirim data ke view
+        return view('menus.index', compact('foods', 'drinks'));
+    }
 }

@@ -3,30 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
-use App\Models\Table;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
     public function selectMenus()
     {
-        $menus = Menu::all();
-        return view('reservations.menus', compact('menus'));
+        // Menampilkan menu makanan dan minuman
+        $foods = Menu::where('category', 'Makanan')->get();
+        $drinks = Menu::where('category', 'Minuman')->get();
+        
+        return view('reservations.menus', compact('foods', 'drinks'));
     }
 
-    public function selectTable(Request $request)
+    public function selectTable()
     {
-        $selectedMenus = $request->input('menus', []);
-        $tables = Table::where('status', 'available')->get();
-        return view('reservations.tables', compact('selectedMenus', 'tables'));
+        // Logika untuk memilih meja (jika ada)
     }
 
     public function confirmReservation(Request $request)
     {
-        $selectedMenus = $request->input('menus');
-        $tableId = $request->input('table_id');
-
-        // Simpan data reservasi (implementasi dapat disesuaikan)
-        return view('reservations.confirmation', compact('selectedMenus', 'tableId'));
+        // Logika untuk mengonfirmasi reservasi (jika ada)
     }
 }
