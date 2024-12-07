@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <h1>Pilih Meja</h1>
-    <form action="{{ route('reservations.confirm') }}" method="POST">
+    <form action="{{ route('tables.select') }}" method="POST">
         @csrf
         @foreach ($selectedMenus as $menuId)
             <input type="hidden" name="menus[]" value="{{ $menuId }}">

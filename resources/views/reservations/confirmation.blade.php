@@ -1,23 +1,33 @@
-<h3>Makanan yang Dipilih:</h3>
-<ul>
-    @foreach ($selectedMenus as $menuId)
-        @php
-            $menu = \App\Models\Menu::find($menuId);
-        @endphp
-        @if ($menu && $menu->category === 'Makanan')
-            <li>{{ $menu->name }} - Rp {{ number_format($menu->price, 0, ',', '.') }}</li>
-        @endif
-    @endforeach
-</ul>
+@extends('layouts.app')
 
-<h3>Minuman yang Dipilih:</h3>
-<ul>
-    @foreach ($selectedMenus as $menuId)
-        @php
-            $menu = \App\Models\Menu::find($menuId);
-        @endphp
-        @if ($menu && $menu->category === 'Minuman')
+@section('content')
+<div class="container mt-5">
+    <h1>Rincian Pesanan</h1>
+
+    <h2>Meja Nomor {{ $table->table_number }}</h2>
+    <p>Kapasitas: {{ $table->capacity }} orang</p>
+
+    <h3>Pesanan Anda:</h3>
+    <ul>
+        @foreach ($selectedMenus as $menu)
             <li>{{ $menu->name }} - Rp {{ number_format($menu->price, 0, ',', '.') }}</li>
-        @endif
-    @endforeach
-</ul>
+        @endforeach
+    </ul>
+
+    <p>Total Pesanan: Rp 
+        @php 
+            $total = $selectedMenus->sum('price');
+        @endphp
+        {{ number_format($total, 0, ',', '.') }}
+    </p>
+
+    <form action="{{ route('reservations.confirm') }}" method="POST">
+        @csrf
+        <input type="hidden" name="table_id" value="{{ $table->id }}">
+        @foreach ($selectedMenus as $menu)
+            <input type="hidden" name="menus[]" value="{{ $menu->id }}">
+        @endforeach
+        <button type="submit" class="btn btn-primary">Konfirmasi Reservasi</button>
+    </form>
+</div>
+@endsection

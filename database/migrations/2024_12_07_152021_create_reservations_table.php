@@ -11,11 +11,12 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('table_id');
-            $table->string('customer_name');
-            $table->timestamp('reserved_at');
+            $table->text('menus'); // JSON untuk menyimpan menu
+            $table->enum('status', ['pending', 'confirmed', 'completed']);
             $table->timestamps();
 
-            $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
+            // Membuat foreign key yang menghubungkan dengan tabel `tables`
+            $table->foreign('table_id')->references('id')->on('tables');
         });
     }
 

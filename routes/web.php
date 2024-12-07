@@ -31,3 +31,11 @@ Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
 Route::get('/reservations/menus', [ReservationController::class, 'selectMenus'])->name('reservations.menus'); // Customer view for menu
 Route::get('/reservations/tables', [ReservationController::class, 'selectTable'])->name('reservations.tables');
 Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
+
+
+Route::get('/reservations/menus', [ReservationController::class, 'selectMenus'])->name('reservations.menus');
+Route::post('/reservations/select-table', [ReservationController::class, 'selectTable'])->name('reservations.selectTable');
+Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
+
+Route::get('tables', [TableController::class, 'index'])->name('tables.index');
+Route::post('tables/select', [TableController::class, 'selectTable'])->name('tables.select');
