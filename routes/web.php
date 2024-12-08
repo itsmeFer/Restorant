@@ -1,41 +1,47 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ReservationController;
+use Illuminate\Support\Facades\Route;
 
+// Halaman awal
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Dashboard untuk pengguna yang sudah terverifikasi
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Rute yang memerlukan autentikasi
 Route::middleware('auth')->group(function () {
+    // Rute untuk profil pengguna
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('menus', MenuController::class);
-Route::resource('orders', OrderController::class);
-Route::resource('tables', TableController::class);
+// Resource controllers
+Route::resource('menus', MenuController::class); // CRUD untuk menu
+Route::resource('orders', OrderController::class); // CRUD untuk pesanan
+Route::resource('tables', TableController::class); // CRUD untuk meja
 
-Route::get('/menus', [MenuController::class, 'index'])->name('menus.index'); // Admin view for menu
+// Rute khusus untuk reservasi
+Route::prefix('reservations')->name('reservations.')->group(function () {
+    Route::get('/', [ReservationController::class, 'index'])->name('index'); // Daftar reservasi
+    Route::get('/menus', [ReservationController::class, 'selectMenus'])->name('menus'); // Pilih menu
+    Route::post('/select-table', [ReservationController::class, 'selectTable'])->name('selectTable'); // Pilih meja
+    Route::post('/confirm', [ReservationController::class, 'confirmReservation'])->name('confirm'); // Konfirmasi reservasi
+});
 
-Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
-Route::get('/reservations/menus', [ReservationController::class, 'selectMenus'])->name('reservations.menus'); // Customer view for menu
-Route::get('/reservations/tables', [ReservationController::class, 'selectTable'])->name('reservations.tables');
-Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
-
-
-Route::get('/reservations/menus', [ReservationController::class, 'selectMenus'])->name('reservations.menus');
-Route::post('/reservations/select-table', [ReservationController::class, 'selectTable'])->name('reservations.selectTable');
-Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
-
-Route::get('tables', [TableController::class, 'index'])->name('tables.index');
-Route::post('tables/select', [TableController::class, 'selectTable'])->name('tables.select');
+// Rute khusus untuk meja
+Route::prefix('tables')->name('tables.')->group(function () {
+    Route::get('/', [TableController::class, 'index'])->name('index'); // Daftar meja
+    Route::post('/select', [TableController::class, 'selectTable'])->name('select'); // Pilih meja tertentu
+});
+Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');

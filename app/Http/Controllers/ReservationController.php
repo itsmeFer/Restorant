@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Table;
 use Illuminate\Http\Request;
+use App\Models\Reservation;
 
 class ReservationController extends Controller
 {
+    public function index()
+    {
+        // Ambil semua reservasi dengan data terkait, misalnya meja
+        $reservations = Reservation::with('table')->get();
+
+        // Kirim data reservasi ke view
+        return view('reservations.index', compact('reservations'));
+    }
     // Menampilkan menu makanan dan minuman
     public function selectMenus()
     {
