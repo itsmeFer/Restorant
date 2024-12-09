@@ -6,6 +6,7 @@ use App\Models\Menu;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use App\Models\Reservation;
+use Illuminate\Support\Carbon;
 
 class ReservationController extends Controller
 {
@@ -49,6 +50,7 @@ class ReservationController extends Controller
     {
         // Menyimpan reservasi ke database
         $reservation = new Reservation();
+        $reservation->start_time = Carbon::now(); // Atur waktu masuk saat ini
         $reservation->table_id = $request->table_id;
         $reservation->menus = json_encode($request->menus);
         $reservation->status = 'confirmed';
@@ -81,4 +83,64 @@ class ReservationController extends Controller
 
         return redirect()->route('reservations.menus')->with('success', 'Reservasi berhasil dikonfirmasi!');
     }
+
+    public function complete($id)
+{
+    // Cari reservasi berdasarkan ID
+    $reservation = Reservation::findOrFail($id);
+    
+    // Update status reservasi menjadi selesai
+    $reservation->status = 'selesai';
+    $reservation->save();
+
+    return redirect()->route('reservations.index')->with('success', 'Reservasi selesai!');
+}
+
+public function destroy($id)
+{
+    // Cari reservasi berdasarkan ID
+    $reservation = Reservation::findOrFail($id);
+    
+    // Hapus reservasi
+    $reservation->delete();
+
+    return redirect()->route('reservations.index')->with('success', 'Reservasi berhasil dihapus!');
+}
+public function edit($id)
+{
+    // Cari reservasi berdasarkan ID
+    $reservation = Reservation::findOrFail($id);
+    
+    // Ambil semua meja yang tersedia (jika diperlukan untuk memilih meja lagi)
+    $tables = Table::where('status', 'available')->get();
+
+    // Ambil semua menu (jika perlu untuk memilih menu lagi)
+    $menus = Menu::all();
+
+    return view('reservations.edit', compact('reservation', 'tables', 'menus'));
+}
+public function update(Request $request, $id)
+{
+    // Validasi input
+    $request->validate([
+        'table_id' => 'required|exists:tables,id',
+        'menus' => 'required|array|min:1',
+        'customer_name' => 'required|string|max:255',
+        'status' => 'required|string|in:confirmed,completed',
+    ]);
+
+    // Cari reservasi berdasarkan ID
+    $reservation = Reservation::findOrFail($id);
+
+    // Update data reservasi
+    $reservation->table_id = $request->table_id;
+    $reservation->menus = json_encode($request->menus);
+    $reservation->status = $request->status;
+    $reservation->customer_name = $request->customer_name;
+    $reservation->save();
+
+    return redirect()->route('reservations.index')->with('success', 'Reservasi berhasil diperbarui!');
+}
+
+
 }

@@ -45,3 +45,14 @@ Route::prefix('tables')->name('tables.')->group(function () {
 });
 Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
 Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+Route::post('/reservations/confirm', [ReservationController::class, 'confirmReservation'])->name('reservations.confirm');
+
+Route::resource('reservations', ReservationController::class);
+
+// Rute untuk menyelesaikan reservasi
+Route::put('reservations/{reservation}/complete', [ReservationController::class, 'complete'])->name('reservations.complete');
+
+// Rute untuk menghapus reservasi
+Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+Route::get('reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');

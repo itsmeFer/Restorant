@@ -8,16 +8,13 @@ class CreateReservationsTable extends Migration
 {
     public function up()
     {
-        Schema::create('reservations', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('table_id');
-            $table->text('menus'); // JSON untuk menyimpan menu
-            $table->enum('status', ['pending', 'confirmed', 'completed']);
-            $table->timestamps();
-
-            // Membuat foreign key yang menghubungkan dengan tabel `tables`
-            $table->foreign('table_id')->references('id')->on('tables');
+        Schema::table('reservations', function (Blueprint $table) {
+            $table->time('check_in_time')->nullable();  // Jam masuk
+            $table->time('check_out_time')->nullable(); // Jam keluar
+            $table->string('payment_method')->nullable(); // Pembayaran via
+            $table->string('customer_name')->nullable(); // Atas nama
         });
+        
     }
 
     public function down()

@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/MenuController.php
 
 namespace App\Http\Controllers;
 
@@ -16,5 +15,7 @@ class MenuController extends Controller
 
         // Kirim data ke view
         return view('menus.index', compact('foods', 'drinks'));
+        $menus = Menu::all(); // Atau sesuaikan dengan query Anda
+        return view('menus.index', compact('menus'));
     }
 }
