@@ -48,6 +48,8 @@ class ReservationController extends Controller
     // Konfirmasi reservasi
     public function confirmReservation(Request $request)
     {
+
+        
         // Menyimpan reservasi ke database
         $reservation = new Reservation();
         $reservation->start_time = Carbon::now(); // Atur waktu masuk saat ini
