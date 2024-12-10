@@ -49,12 +49,17 @@ class ReservationController extends Controller
     public function confirmReservation(Request $request)
     {
 
-        
+        $request->validate([
+            'table_id' => 'required|exists:tables,id',
+            'menus' => 'required|array|min:1',
+            'customer_name' => 'required|string|max:255',
+        ]);
         // Menyimpan reservasi ke database
         $reservation = new Reservation();
         $reservation->start_time = Carbon::now(); // Atur waktu masuk saat ini
         $reservation->table_id = $request->table_id;
         $reservation->menus = json_encode($request->menus);
+        $reservation->customer_name = $request->customer_name;
         $reservation->status = 'confirmed';
         $reservation->save();
 

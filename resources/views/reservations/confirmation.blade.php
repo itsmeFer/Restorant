@@ -144,24 +144,28 @@
         </div>
 
         <form id="reservation-form" action="{{ route('reservations.confirm') }}" method="POST">
-            @csrf
-            <input type="hidden" name="table_id" value="{{ $table->id }}">
-            @foreach ($selectedMenus as $menu)
-                <input type="hidden" name="menus[]" value="{{ $menu->id }}">
-            @endforeach
-            <button type="submit" class="btn-primary">Konfirmasi Reservasi</button>
-        </form>
-    </div>
+    @csrf
+    <input type="hidden" name="table_id" value="{{ $table->id }}">
+    @foreach ($selectedMenus as $menu)
+        <input type="hidden" name="menus[]" value="{{ $menu->id }}">
+    @endforeach
+    <!-- Tambahkan input untuk customer_name -->
+    <input type="hidden" name="customer_name" id="hidden_customer_name">
+    <button type="submit" class="btn-primary">Konfirmasi Reservasi</button>
+</form>
 
-    <script>
-        document.getElementById('reservation-form').addEventListener('submit', function(event) {
-            var customerName = document.getElementById('customer_name').value.trim();
-            if (customerName === '') {
-                alert('Nama pelanggan harus diisi!');
-                event.preventDefault(); // Prevent the form from submitting
-            }
-        });
-    </script>
+<script>
+    document.getElementById('reservation-form').addEventListener('submit', function(event) {
+        var customerName = document.getElementById('customer_name').value.trim();
+        if (customerName === '') {
+            alert('Nama pelanggan harus diisi!');
+            event.preventDefault(); // Prevent the form from submitting
+        } else {
+            document.getElementById('hidden_customer_name').value = customerName;
+        }
+    });
+</script>
+
 
 </body>
 </html>
