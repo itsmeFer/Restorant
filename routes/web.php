@@ -56,3 +56,24 @@ Route::put('reservations/{reservation}/complete', [ReservationController::class,
 Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 
 Route::get('reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
+
+// Rute untuk reservasi
+Route::resource('reservations', ReservationController::class);
+
+// Menandai reservasi selesai dan mengarahkan ke pembayaran
+Route::put('reservations/{reservation}/complete', [ReservationController::class, 'complete'])->name('reservations.complete');
+
+// Halaman pembayaran
+Route::get('reservations/{reservation}/payment', [ReservationController::class, 'payment'])->name('reservations.payment');
+
+// Proses pembayaran
+Route::post('reservations/{reservation}/payment', [ReservationController::class, 'processPayment'])->name('reservations.payment.process');
+
+// Route untuk memilih metode pembayaran
+Route::get('reservations/{reservation}/payment', [ReservationController::class, 'showPaymentForm'])->name('reservations.payment');
+
+// Route untuk mengonfirmasi pembayaran
+Route::post('reservations/{reservation}/payment', [ReservationController::class, 'processPayment'])->name('reservations.processPayment');
+Route::get('/reservations/{reservation}/payment', [ReservationController::class, 'showPaymentForm'])->name('reservations.payment');
+Route::post('/reservations/{reservation}/payment', [ReservationController::class, 'processPayment'])->name('reservations.processPayment');
+Route::get('/reservations/{reservation}/payment', [ReservationController::class, 'showPaymentForm'])->name('reservations.payment');

@@ -24,7 +24,7 @@ class ReservationController extends Controller
         $foods = Menu::where('category', 'Makanan')->get();
         $drinks = Menu::where('category', 'Minuman')->get();
 
-        return view('reservations.menus', compact('foods', 'drinks'));
+        return view('menus.index', compact('foods', 'drinks'));
     }
 
     // Menampilkan halaman untuk memilih meja setelah menu dipilih
@@ -93,6 +93,21 @@ class ReservationController extends Controller
 
     public function complete($id)
 {
+
+      // Cari reservasi berdasarkan ID
+      $reservation = Reservation::findOrFail($id);
+
+      // Pastikan reservasi masih dalam status 'confirmed' atau lainnya
+      if ($reservation->status !== 'confirmed') {
+          return redirect()->route('reservations.index')->with('error', 'Reservasi tidak valid untuk diselesaikan.');
+      }
+  
+      // Ambil waktu sekarang untuk end_time
+      $reservation->end_time = Carbon::now(); 
+  
+      // Misalnya, Anda mengarahkan ke halaman pembayaran setelah selesai reservasi
+      return redirect()->route('reservations.payment', ['reservation' => $reservation->id]);
+  
     // Cari reservasi berdasarkan ID
     $reservation = Reservation::findOrFail($id);
     
@@ -149,5 +164,41 @@ public function update(Request $request, $id)
     return redirect()->route('reservations.index')->with('success', 'Reservasi berhasil diperbarui!');
 }
 
+    // Menandai reservasi selesai dan mengisi jam keluar
+   
+    // Halaman pembayaran
+   // Menampilkan form pembayaran
+public function showPaymentForm($id)
+{
+    $reservation = Reservation::findOrFail($id);
+    return view('reservations.payment', compact('reservation'));
+}
+
+// Memproses pembayaran
+public function processPayment($id, Request $request)
+{
+    $reservation = Reservation::findOrFail($id);
+
+    // Validasi metode pembayaran
+    $validatedData = $request->validate([
+        'payment_method' => 'required|string|in:cash,qris,kartu',
+    ]);
+
+    // Perbarui metode pembayaran
+    $reservation->payment_method = $validatedData['payment_method'];
+    $reservation->status = 'confirmed'; // Update status menjadi confirmed setelah pembayaran
+
+    // Pastikan 'end_time' hanya diupdate setelah pembayaran
+    if ($reservation->status == 'confirmed') {
+        $reservation->end_time = now(); // Set 'end_time' jika pembayaran dikonfirmasi
+    }
+
+    // Simpan perubahan
+    $reservation->save();
+
+    return redirect()->route('reservations.index')->with('success', 'Pembayaran berhasil dikonfirmasi.');
+}
+
 
 }
+
