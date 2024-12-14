@@ -127,7 +127,7 @@
 
     <div class="container">
         @if($reservations->isEmpty())
-            <p>Tidak ada reservasi.</p>
+            <p>Belum ada reservasi.</p>
         @else
             <table>
                 <thead>
